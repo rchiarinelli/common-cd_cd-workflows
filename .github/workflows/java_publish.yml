@@ -1,14 +1,15 @@
 
 name: Publish
 on:
-  workflow_call:    
+  workflow_call:
     inputs:
       gh_user_name:
         required: true
         type: string
-      gh_packages_token:
+    secrets:
+      packages_token:
         required: true
-        type: string
+
 
 env:
   REGISTRY: ghcr.io
@@ -40,5 +41,5 @@ jobs:
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_USERNAME: ${{ inputs.gh_user_name }}
-          GH_TOKEN: ${{ inputs.gh_packages_token }}
+          GH_TOKEN: ${{ secrets.packages_token }}
 

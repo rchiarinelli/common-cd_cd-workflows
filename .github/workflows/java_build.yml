@@ -25,7 +25,7 @@ jobs:
     - name: Build with Gradle Wrapper
       env:
         GH_USERNAME: ${{ github.actor }}
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
+        GH_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}            
       run: ./gradlew build
     - name: Publish Test Report
       uses: mikepenz/action-junit-report@v5

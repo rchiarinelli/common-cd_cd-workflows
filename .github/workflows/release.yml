@@ -1,0 +1,27 @@
+
+name: Release
+on:
+  workflow_call:
+    inputs:
+      dry_run:
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  checks: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bump version and push tag
+        uses: laputansoft/github-tag-action@v4.6
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          release_branches: "master,main"
+          dry_run: ${{ inputs.dry_run }}

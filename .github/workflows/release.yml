@@ -13,15 +13,18 @@ permissions:
 
 jobs:
   run:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     permissions:
       contents: write
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Bump version and push tag
-        uses: laputansoft/github-tag-action@v4.6
+      - uses: actions/checkout@v4.2.2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          release_branches: "master,main"
-          dry_run: ${{ inputs.dry_run }}
+          fetch-depth: 0
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@v1 # Don't use @master or @v1 unless you're happy to test the latest version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # if you don't want to set write permissions use a PAT token
+          TAG_PREFIX: v
+          

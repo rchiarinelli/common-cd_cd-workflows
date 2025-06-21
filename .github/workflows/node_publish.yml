@@ -1,0 +1,44 @@
+
+name: Publish
+on:
+  workflow_call:
+    inputs:
+      gh_user_name:
+        required: true
+        type: string
+    secrets:
+      packages_token:
+        required: true
+
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+
+    strategy:
+      matrix:
+        node-version: ['23.x']
+  
+
+    steps:    
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Get latest tag
+      id: get_tag
+      run: echo "PACKAGE_VERSION=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
+    - uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        registry-url: 'https://npm.pkg.github.com'
+        scope: '@${{ inputs.gh_user_name }}'
+    - run: npm ci
